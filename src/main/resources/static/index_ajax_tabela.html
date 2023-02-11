@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<title>Spring Boot : Livros</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link rel="stylesheet" type="text/css" href="webjars/bootstrap/5.1.3/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="webjars/EasyAutocomplete/1.3.3/dist/easy-autocomplete.themes.css" />
+</head>
+<body>
+	<div class="container">
+		<script type="text/javascript" src="webjars/jquery/3.6.3/jquery.min.js"></script>
+		<script type="text/javascript" src="webjars/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="webjars/EasyAutocomplete/1.3.3/dist/jquery.easy-autocomplete.js"></script>  
+
+		<script type="text/javascript">
+			$(document).ready(function () {
+				let filtroForm = document.getElementById('filtro');
+				
+				filtroForm.addEventListener('input', (filtro) => {
+	                $.ajax({ 
+						type : 'GET', 
+						url : '/api/livros/find?filtro=' + filtroForm.value,
+						data : '$format=json', 
+						dataType : 'json', 
+						success : function(dados) { 
+							let total = 0; 
+							$('#livros tbody').empty();
+							$.each(dados, function(d, resultado) { 
+								$('#livros tbody').append(
+									'<tr>' + 
+										'<td class="text-nowrap">' + resultado.titulo + '</td>' + 
+										"<td class=\"text-nowrap\">" + resultado.paginas + '</td>' + 
+										"<td class=\"text-nowrap\">" + resultado.autor + '</td>' + 
+									'</tr>');
+								total++; 
+							});
+							
+							if (total === 0) {
+								$('#resultados').text('Nenhum registro encontrado!');
+							} else if(total === 1) {
+								$('#resultados').text('1 registro encontrado!');
+							} else {
+								$('#resultados').text(total + ' registros encontrados!');
+							}
+						}
+					}); 
+	            });
+			});
+		</script>
+		
+		<h1 class="text-center mt-2">
+  			<img alt="Spring" class="block" id="springlogo" src="spring-logo.svg" width="300">
+  			Spring Boot : Livros
+ 		</h1>
+ 		
+ 		<form class="mt-1">
+			Buscar:
+  			<input type="text" id="filtro" autofocus="autofocus" class="form-control" />
+ 		</form>
+ 		
+ 		<table id="livros" class="table table-striped table-condensed table-hover table-responsive">
+            <caption style="font-size: 2em; font-weight: bold; text-align: center; caption-side: top">
+                Livros
+            </caption>
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Título</th>
+                    <th># Páginas</th>
+                    <th>Autor</th>
+                </tr>
+            </thead>
+            
+            <tbody></tbody>
+        </table>
+        
+ 		<div id="resultados"></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+CREATE TABLE livro (
+	id INT AUTO_INCREMENT,
+	titulo VARCHAR(255) NOT NULL,
+	paginas INT NOT NULL,
+	autor VARCHAR(255) NOT NULL
+);
